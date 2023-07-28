@@ -1,5 +1,7 @@
 package com.example.myapplication2
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -18,10 +20,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.modifier.modifierLocalConsumer
@@ -34,12 +42,8 @@ import com.example.myapplication2.ui.theme.defaultRecipes
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {        super.onCreate(savedInstanceState)
-        setContent {            MaterialTheme {                Column(modifier = Modifier                    .fillMaxSize()
-            .fillMaxHeight()
-            .clickable {                    })
-        {
-            RecipeList(defaultRecipes)
-        }            }        }    }
+        setContent {           
+        Greet2(msg = Message("Hello", "G"))}    }
     @Preview(name = "Light Mode")
 
 
@@ -56,8 +60,13 @@ fun GreetPreview(){
     }}
 
 data class Message(val author: String, val body:String)
+@SuppressLint("UnrememberedMutableState", "RememberReturnType")
 @Composable
+
 fun Greet2(msg: Message) {
+    val count: MutableState<Int> = rememberSaveable {
+        mutableStateOf(0)
+    }
     Row(modifier = Modifier.padding(8.dp)) {
         Image(
             painter = painterResource(R.drawable.ic_launcher_foreground),
@@ -66,6 +75,8 @@ fun Greet2(msg: Message) {
                 .size(100.dp)
                 .clip(CircleShape)
                 .border(1.5.dp, MaterialTheme.colorScheme.primary, CircleShape)
+
+
             //   .size(40.dp)
             //    .clip(CircleShape)
             //   .border(1.5.dp, MaterialTheme.colorScheme.primary, CircleShape)
@@ -87,6 +98,12 @@ fun Greet2(msg: Message) {
                 )
             }
 
+
+            Text(text = "You had ${count
+                .value} glasses")
+                Button(onClick = { count.value++ }) { Text(text = "Add One")
+
+}
         }
 
     }
@@ -97,7 +114,14 @@ fun Greet2(msg: Message) {
     fun Greeting(name: String, modifier: Modifier = Modifier) {
         Text(text = "Hello $name!", modifier = modifier)
 
-    }}}
+    }}
+
+    @Preview
+    @Composable
+    fun previewGreet2(){
+        Greet2(msg = MainActivity.Message("Hello", "G"))
+    }
+}
 
 
 
